@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html >
+<!--From https://codepen.io/frytyler/pen/EGdtg-->
+<head>
+  <meta charset="UTF-8">
+  <title>IPL Twenty20 Prediction</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+<style>
+div {
+  background-image: url("https://i.ibb.co/cLLYZVW/IPL20.jpg");
+  background-repeat: no-repeat;	
+  background-size: 100%;
+  opacity: 7;
+  filter:alpha(opacity=40);
+  height:100%;
+  width:100%;
+  z-index:0.1;
+}
+
+  
+</style>
+ 
+</head>
+
+<body>
+	<table border="0">
+		 <div class="login">    
+			<marquee width="800" scrollamount="80" scrolldelay="500"  ><h1 style="font-family:verdana;color:Indigo;font-size:280%">IPL Twenty20 Prediction  Inning-II</h1></marquee>
+
+			 <!-- Main Input For Receiving Query to our ML -->
+			<form action="{{ url_for('predict')}}"method="post">
+					<br>
+					<h4><label for="name" style="font-family:verdana;color:MidnightBlue;font-size:180%;text-align: left;display: inline-block;" >Over:</label>&nbsp;&nbsp;<select name="over" id="over" style="font-family:verdana;color:MidnightBlue;font-size:100%;text-align: left;display: inline-block;" required="required">
+					<option value=""></option>			
+					<option value="1">over 1</option>
+					<option value="2">over 2</option>
+					<option value="3">over 3</option>
+					<option value="4">over 4</option>
+					<option value="5">over 5</option>
+					<option value="6">over 6</option>			
+					<option value="7">over 7</option>
+					<option value="8">over 8</option>
+					<option value="9">over 9</option>			
+					<option value="10">over 10</option>
+					<option value="11">over 11</option>
+					<option value="12">over 12</option>			
+					<option value="13">over 13</option>
+					<option value="14">over 14</option>
+					<option value="15">over 15</option>			
+					<option value="16">over 16</option>
+					<option value="17">over 17</option>
+					<option value="18">over 18</option>			
+					<option value="19">over 19</option>
+					<option value="20">over 20</option>
+								
+					</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select name="ball" id="ball" style="font-family:verdana;color:MidnightBlue;font-size:100%;text-align: left;display: inline-block;" required="required">			
+					<option value=""></option>
+					<option value="1">ball 1</option>			
+					<option value="2">ball 2</option>
+					<option value="3">ball 3</option>
+					<option value="4">ball 4</option>
+					<option value="5">ball 5</option>
+					<option value="6">ball 6</option>
+					<option value="0">wide ball</option>	
+					<option value="0">no ball</option>
+					</select>&nbsp;&nbsp;&nbsp;<label for="name" style="font-family:verdana;color:MidnightBlue;font-size:180%;text-align: left;display: inline-block;" > : Ball</label></h4>
+					
+					<h4><label for="name" style="font-family:verdana;color:MidnightBlue;font-size:180%;text-align: left;display: inline-block;" >Batsman Playing:</label>&nbsp;&nbsp;<select name="batsman" id="batsman" placeholder="Batsman" style="font-family:verdana;color:MidnightBlue;font-size:100%;text-align: left;display: inline-block;" required="required">
+					<option value=""></option>			
+					<option value="Batsman1">Batsman1</option>
+					<option value="Batsman2">Batsman2</option>
+					<option value="Batsman3">Batsman3</option>
+					<option value="Batsman4">Batsman4</option>
+					<option value="Batsman5">Batsman5</option>
+					<option value="Batsman6">Batsman6</option>			
+					<option value="Batsman7">Batsman7</option>
+					<option value="Batsman8">Batsman8</option>
+					<option value="Batsman9">Batsman9</option>			
+					<option value="Batsman10">Batsman10</option>
+					<option value="Batsman11">Batsman11</option>
+					</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="batman_score" name="batman_score"  style="font-family:verdana;color:MidnightBlue;font-size:100%;text-align: center;display: inline-block;" required="required">&nbsp;&nbsp;&nbsp;<label for="name" style="font-family:verdana;color:MidnightBlue;font-size:180%;text-align: left;display: inline-block;" >: Batsman Run on this ball</label></h4>		
+								
+					<h4><label for="name" style="font-family:verdana;color:MidnightBlue;font-size:180%;text-align: left;display: inline-block;" >Bowler Bowling:</label>&nbsp;&nbsp;<select name="bowler" id="bowler"  style="font-family:verdana;color:MidnightBlue;font-size:100%;text-align: center;display: inline-block;" required="required">
+					<option value=""></option>			
+					<option value="Bowler1">Bowler1</option>
+					<option value="Bowler2">Bowler2</option>
+					<option value="Bowler3">Bowler3</option>
+					<option value="Bowler4">Bowler4</option>
+					<option value="Bowler5">Bowler5</option>
+					<option value="Bowler6">Bowler6</option>			
+					<option value="Bowler7">Bowler7</option>
+					<option value="Bowler8">Bowler8</option>
+					<option value="Bowler9">Bowler9</option>			
+					<option value="Bowler10">Bowler10</option>
+					</select>					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="extra_runs" name="extra_runs" style="text-align: center" style="font-family:verdana;color:MidnightBlue;font-size:100%;text-align: center;display: inline-block;"  required="required">&nbsp;&nbsp;&nbsp;<label for="name" style="font-family:verdana;color:MidnightBlue;font-size:180%;text-align: left;display: inline-block;">: Extra Run on this ball</label></h4>
+					
+                    <!-- <input id="bowler_run" name="bowler_run" style="font-family:verdana;color:MidnightBlue;font-size:100%;text-align: center;display: inline-block;"  required="required">&nbsp;&nbsp;&nbsp;<label for="name" style="font-family:verdana;color:MidnightBlue;font-size:180%;text-align: left;display: inline-block;" >: Bowler Run on this ball</label></h4>	-->
+					
+					<!--<h4><label for="name" style="font-family:verdana;color:MidnightBlue;font-size:180%;text-align: left;display: inline-block;" >Extra Run :</label>&nbsp;&nbsp;<input id="extra_runs" name="extra_runs" style="text-align: center" style="font-family:verdana;color:MidnightBlue;font-size:100%;text-align: center;display: inline-block;"  required="required">			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="wkts_left" name="wkts_left"  style="font-family:verdana;color:MidnightBlue;font-size:100%;text-align: center;display: inline-block;" required="required">&nbsp;&nbsp;&nbsp;<label for="name" style="font-family:verdana;color:MidnightBlue;font-size:180%;text-align: left;display: inline-block;" >: Wkts Left</label></h4>	-->	
+					
+					<!-- <label for="name" style="font-family:verdana;color:MidnightBlue;font-size:130%" >Batsman Runs:</label>&nbsp;&nbsp;<input id="batsman_runs" name="batsman_runs"  required="required"></h4>	-->
+					
+					<!-- <h4><label for="name" style="font-family:verdana;color:MidnightBlue;font-size:180%;text-align: left;display: inline-block;" >Total Balls Played:</label>&nbsp;&nbsp;<input id="balls_played" name="balls_played" style="font-family:verdana;color:MidnightBlue;font-size:100%;text-align: center;display: inline-block;" required="required">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="remaining_balls" name="remaining_balls" style="font-family:verdana;color:MidnightBlue;font-size:100%;text-align: center;display: inline-block;" required="required">&nbsp;&nbsp;&nbsp;<label for="name" style="font-family:verdana;color:MidnightBlue;font-size:180%;text-align: left;display: inline-block;">: Total Balls Left</label></h4>-->
+					
+					<h4><label for="name" style="font-family:verdana;color:MidnightBlue;font-size:180%;text-align: left;display: inline-block;" >Team Present Score:</label>&nbsp;&nbsp;<input id="present_score" name="present_score" style="font-family:verdana;color:MidnightBlue;font-size:100%;text-align: center;display: inline-block;" required="required">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="target" name="target"  style="font-family:verdana;color:MidnightBlue;font-size:100%;text-align: center;display: inline-block;" required="required">&nbsp;&nbsp;&nbsp;<label for="name" style="font-family:verdana;color:MidnightBlue;font-size:180%;text-align: left;display: inline-block;" >: Runs Required to win</label></h4>		
+	
+	
+	                <h4><label for="name" style="font-family:verdana;color:MidnightBlue;font-size:180%;text-align: left;display: inline-block;" >Wkts Left :</label>&nbsp;&nbsp;<input id="wkts_left" name="wkts_left"  style="font-family:verdana;color:MidnightBlue;font-size:100%;text-align: center;display: inline-block;" required="required">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h4>
+	
+					<br><br><br><br><button id="sub" type="submit" style= "background-color:#008CBA; border: none;  color: white;  padding: 15px 32px;  text-align: center;  text-decoration: none;  display: inline-block;  font-size: 16px;border-radius: 8px;" class="btn success">Predict Outcome </button>
+					
+					<pre class="blink">
+					<h4><label for="name" style="font-family:verdana;color:#800080;font-size:210%" >{{ prediction_text }}</label>
+					</pre>
+					
+					
+					
+					
+					
+					<br><br><label class="login-box text-center" style="font-family:verdana;color:Indigo  ;font-size:100%; text-align: right;">
+										   <span>Group4(Gurgaon) Greatlearning&#169;</span> 
+					</label> 
+					
+					</h4>
+
+			</form>
+
+		 </div>
+	 
+	 </table>
+	 <script>
+	window.setInterval(function(){
+    $('.blink').css("opacity","40");
+    window.setTimeout(function(){
+        $('.blink').css("opacity","0.1");
+    },750);
+}, 1000);
+	 </script>
+    <style>	
+	
+        body {
+            background-color: #AED6F1;
+            text-align: center;
+            padding: 0px;
+			font-size: 15px;
+			font-family: sans-serif;
+		
+        }
+		
+		
+
+        #over {
+            width: 160px;
+            height: 30px;
+            text-align: Right;
+            border-radius: 14px;
+            font-size: 16px;
+        } 
+
+        #ball {
+            width: 160px;
+            height: 30px;
+            text-align: Right;
+            border-radius: 14px;
+            font-size: 16px;
+        }
+		
+        #balls_played {
+		    width: 160px;
+            border-radius: 14px;
+            height: 25px;
+            font-size: 20px;
+            text-align: center;
+        }
+	
+			
+        #batsman {
+            width: 160px;
+            height: 30px;
+            text-align: Right;
+			border-radius: 14px;
+            border-radius: 14px;
+            font-size: 16px;
+        } 	 
+	 
+	 
+        #batman_score {
+		    width: 160px;
+            border-radius: 14px;
+            height: 25px;
+            font-size: 20px;
+            text-align: center;
+        }
+	 
+        #bowler {
+            width: 160px;
+            height: 30px;
+            text-align: Right;
+			border-radius: 14px;
+            border-radius: 14px;
+            font-size: 16px;
+        } 
+	 
+        #bowler_run {
+		    width: 160px;
+            border-radius: 14px;
+            height: 25px;
+            font-size: 20px;
+            text-align: center;
+        }			
+
+		
+        #extra_runs {
+		    width: 160px;
+            border-radius: 14px;
+            height: 25px;
+            font-size: 20px;
+            text-align: left;
+        }	
+		
+        #batsman_runs {
+		    width: 160px;
+            border-radius: 14px;
+            height: 25px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+		
+        #remaining_balls {
+		    width: 160px;
+            border-radius: 14px;
+            height: 25px;
+            font-size: 20px;
+            text-align: center;
+        }	
+		
+		
+		
+        #wkts_left {
+		    width: 160px;
+            border-radius: 14px;
+            height: 25px;
+            font-size: 20px;
+            text-align: center;
+        }	
+		
+		
+        #present_score {
+		    width: 160px;
+            border-radius: 14px;
+            height: 25px;
+            font-size: 20px;
+            text-align: center;
+        }	
+		
+		
+        #target {		
+		    width: 160px;
+            border-radius: 14px;
+            height: 25px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        #metric {		
+            width: 120px;
+            height: 30px;
+            text-align: Right;
+            border-radius: 15px;
+            font-size: 15px;
+        }		
+
+		#sub {
+		    display: inline-block;
+			padding: 4px;
+			margin-bottom: 0;
+			font-size: 15px;			
+			line-height: 1.22857143;
+			text-align: center;
+			MidnightBlue-space: nowrap;
+			vertical-align: middle;
+			touch-action: manipulation;
+			cursor: pointer;
+        }
+		
+
+
+		#.btn {
+		  border: 2px solid black;
+		  background-color: MidnightBlue;
+		  color: black;
+		  padding: 14px 28px;
+		  font-size: 16px;
+		  cursor: pointer;
+		}
+
+		#.success {
+		  border-color: #4CAF50;
+		  color: green;
+		}
+
+		#.success:hover {
+		  background-color: #4CAF50;
+		  color: MidnightBlue;
+		}
+        
+        #sub:hover {
+            background-color: coral;
+        }				
+    </style>
+	
+
+  
+</body>
+</html>
+
+ 
